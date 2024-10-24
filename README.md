@@ -124,22 +124,16 @@ Before you begin, ensure you have the following installed on your system:
 
 If Laravel isn't set up in your project folder yet:
 
-1. **Install Laravel using Composer**:
+1. **Run Composer Install **:
 
    ```bash
-   docker-compose exec app composer create-project --prefer-dist laravel/laravel .
+   docker-compose exec app composer install
    ```
 
-2. **Set the correct permissions for storage and cache**:
+2. **NPM Install**:
 
    ```bash
-   docker-compose exec app chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
-   ```
-
-3. **Generate an application key**:
-
-   ```bash
-   docker-compose exec app php artisan key:generate
+   docker-compose exec app composer install
    ```
 
 ### Step 5: Set Up the `.env` File
@@ -151,7 +145,6 @@ If it doesn’t exist, create an `.env` file:
    ```bash
    cp .env.example .env
    ```
-
 2. **Update your `.env` file with the following database information**:
 
    ```
@@ -162,8 +155,13 @@ If it doesn’t exist, create an `.env` file:
    DB_USERNAME=laravel_user
    DB_PASSWORD=secret
    ```
+3. **Generate an application key**:
 
-3. **Run the migrations**:
+   ```bash
+   docker-compose exec app php artisan key:generate
+   ```
+
+4. **Run the migrations**:
 
    ```bash
    docker-compose exec app php artisan migrate
