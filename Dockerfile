@@ -13,7 +13,8 @@ RUN apt-get update && apt-get install -y \
     vim \
     nano \
     tzdata \
-    software-properties-common
+    software-properties-common \
+    default-mysql-client  # Install the MySQL client
 
 # Add PHP repository
 RUN add-apt-repository ppa:ondrej/php -y
