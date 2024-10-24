@@ -12,7 +12,7 @@ Before you begin, ensure you have the following installed on your system:
 1. **Navigate to your desired project directory in WSL**:
 
    ```bash
-   cd /home/amerloc/dev/
+   cd /home/username/path-to-your-project
    ```
 
 2. **Clone your GitHub repository**:
