@@ -5,18 +5,15 @@ services:
       dockerfile: ../Dockerfile    # Dockerfile is outside the 'security-company' folder
     container_name: security_laravel_app
     restart: unless-stopped
-    working_dir: /var/www/html/security-company  # Set working directory inside 'security-company'
-    user: "${UID:-1000}:${GID:-1000}"  # Use UID and GID with fallback to 1000
+    working_dir: /var/www/html/security-company
     volumes:
       - ./security-company:/var/www/html/security-company  # Mount the 'security-company' folder
-      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini  # Custom PHP config
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     ports:
       - '8000:8000'
     environment:
       APP_ENV: local
       APP_DEBUG: true
-      UID: "${UID:-1000}"  # Use environment variable UID, default to 1000
-      GID: "${GID:-1000}"  # Use environment variable GID, default to 1000
     networks:
       - laravel_network
     depends_on:
