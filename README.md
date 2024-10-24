@@ -1,4 +1,14 @@
 Follow these steps to clone the repository, set up Docker, and configure your Laravel development environment in WSL.
+Yes, the instructions are well-organized and clear. They follow a logical sequence from cloning the repository to setting up Docker, installing Laravel, configuring the environment, and finally pushing changes to GitHub. Here is the markdown content as requested:
+
+### System Requirements
+
+Before you begin, ensure you have the following installed on your system:
+
+- **Docker**: [Install Docker](https://docs.docker.com/get-docker/)
+- **Docker Compose**: [Install Docker Compose](https://docs.docker.com/compose/install/)
+- **Git**: [Install Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+- **WSL (Windows Subsystem for Linux)** (if you are using Windows): [Install WSL](https://docs.microsoft.com/en-us/windows/wsl/install)
 
 ### Step 1: Clone the Repository
 
@@ -11,13 +21,13 @@ Follow these steps to clone the repository, set up Docker, and configure your La
 2. **Clone your GitHub repository**:
 
    ```bash
-   git clone https://github.com/amerloc/Laravel-Docker-DEV.git
+   git clone https://github.com/amerloc/security-company-project.git
    ```
 
 3. **Navigate into the cloned repository**:
 
    ```bash
-   cd Laravel-Docker-DEV
+   cd security-company-project
    ```
 
 ### Step 2: Set Up Docker
@@ -167,4 +177,19 @@ If it doesn’t exist, create an `.env` file:
    git push origin main
    ```
 
+### Instructions for Running Laravel Commands
+
+To run migrations:
+
+```bash
+docker-compose exec app php artisan migrate
+```
+
+To generate an application key:
+
+```bash
+docker-compose exec app php artisan key:generate
+```
+
 Now you’ve set up Laravel with Docker from scratch and connected it to your GitHub repository. Let me know if you encounter any issues!
+

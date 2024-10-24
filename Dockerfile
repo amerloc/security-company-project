@@ -1,4 +1,3 @@
-# Use the official Ubuntu image as the base
 FROM ubuntu:22.04
 
 # Set the environment to noninteractive to avoid prompts
