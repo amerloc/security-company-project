@@ -35,59 +35,80 @@ Before you begin, ensure you have the following installed on your system:
 1. **Create or verify your `docker-compose.yml` file** inside the project. If you already have one in your repository, you can skip this step. Otherwise, use this basic setup:
 
    ```yaml
-   version: '3.8'
+  services:
+  app:
+    build:
+      context: ./security-company  # Use the 'security-company' folder as the build context
+      dockerfile: ../Dockerfile    # Dockerfile is outside the 'security-company' folder
+    container_name: security_laravel_app
+    restart: unless-stopped
+    working_dir: /var/www/html/security-company  # Set working directory inside 'security-company'
+    user: "${UID:-1000}:${GID:-1000}"  # Use UID and GID with fallback to 1000
+    volumes:
+      - ./security-company:/var/www/html/security-company  # Mount the 'security-company' folder
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini  # Custom PHP config
+    ports:
+      - '8000:8000'
+    environment:
+      APP_ENV: local
+      APP_DEBUG: true
+      APP_KEY: base64:your_app_key_here  # Set dynamically after installation
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: laravel_db
+      DB_USERNAME: laravel_user
+      DB_PASSWORD: secret
+      UID: "${UID:-1000}"  # Use environment variable UID, default to 1000
+      GID: "${GID:-1000}"  # Use environment variable GID, default to 1000
+    networks:
+      - laravel_network
+    depends_on:
+      - db
+    command: php artisan serve --host=0.0.0.0 --port=8000
 
-   services:
-     app:
-       build:
-         context: .
-         dockerfile: Dockerfile
-       container_name: laravel_docker_app
-       restart: unless-stopped
-       working_dir: /var/www/html
-       volumes:
-         - ./:/var/www/html
-         - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
-       ports:
-         - '8000:8000'
-       environment:
-         APP_ENV: local
-         APP_DEBUG: true
-         DB_HOST: db
-         DB_PORT: 3306
-         DB_DATABASE: laravel_db
-         DB_USERNAME: laravel_user
-         DB_PASSWORD: secret
-       depends_on:
-         - db
+  db:
+    image: mysql:8.0
+    container_name: security_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: laravel_db
+      MYSQL_USER: laravel_user
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: rootsecret
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+    ports:
+      - '3306:3306'
+    networks:
+      - laravel_network
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
 
-     db:
-       image: mysql:8.0
-       container_name: laravel_docker_db
-       restart: unless-stopped
-       environment:
-         MYSQL_DATABASE: laravel_db
-         MYSQL_USER: laravel_user
-         MYSQL_PASSWORD: secret
-         MYSQL_ROOT_PASSWORD: rootsecret
-       volumes:
-         - dbdata:/var/lib/mysql
-       ports:
-         - '3306:3306'
-
-     redis:
-       image: redis:alpine
-       container_name: laravel_docker_redis
-       restart: unless-stopped
-       ports:
-         - '6379:6379'
+  redis:
+    image: redis:6.2-alpine
+    container_name: security_redis
+    restart: unless-stopped
+    networks:
+      - laravel_network
+    volumes:
+      - redisdata:/data
+    ports:
+      - '6379:6379'
 
    networks:
-     laravel_network:
-       driver: bridge
+   laravel_network:
+      name: security-company-project_laravel_network
+      driver: bridge
 
    volumes:
-     dbdata:
+   dbdata:
+   redisdata:
+
    ```
 
 ### Step 3: Build and Start the Containers
